@@ -1,5 +1,6 @@
 .MovieLibrary {
   text-align: center;
+  background-color: #000;
 }
 
 .ML-logo {
@@ -20,6 +21,7 @@
 
 .ML-intro {
   font-size: large;
+  color: #fff;
 }
 
 @keyframes ML-logo-spin {
