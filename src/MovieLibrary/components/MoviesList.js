@@ -2,15 +2,18 @@ import React, { useState } from 'react'
 import TMDBImage from './TMDBImage'
 import './MoviesList.css'
 import { ReactComponent as Star } from './star.svg';
+import {useDispatch} from 'react-redux'
+import {orderMoviesBy} from '../store/actions'
 
 
 export default function MoviesList ({ movies }){
 
-
+  const dispatch = useDispatch()
   const [selectedMovie, setSelectedMovie] = useState(null)
   const [sortingType, setSortingType] = useState('')
   const handleSortingChange = event => {
     setSortingType(event.target.value)
+    movies = dispatch(orderMoviesBy(event.target.value))
   }
   const handleSelectMovie = movie => setSelectedMovie(movie)
   const onClose = () => setSelectedMovie(null)
@@ -68,10 +71,11 @@ function SortingOptions ({ selectedOption, onChange }) {
 
   return (
     <select value={selectedOption} onChange={onChange}>
-      <option value=""></option>
-      <option value="name_asc">A to Z</option>
-      <option value="name_desc">Z to A</option>
-      <option value="rating">Rating</option>
+      <option value="" disabled></option>
+      <option value="name-asc">A to Z</option>
+      <option value="name-desc">Z to A</option>
+      <option value="rating-desc">Rating ↓</option>
+      <option value="rating-asc">Rating ↑</option>
     </select>
   )
 }

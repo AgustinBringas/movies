@@ -12,6 +12,7 @@ export default function MovieLibrary() {
     dispatch(fetchTopRatedMovies())
   }, [])
   const movies = useSelector(getMovies)
+  
   return(
     <div className="MovieLibrary">
       <header className="ML-header">
