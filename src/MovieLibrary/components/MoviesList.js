@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import TMDBImage from './TMDBImage'
 import './MoviesList.css'
 import { ReactComponent as Star } from './star.svg';
 import {useDispatch} from 'react-redux'
-import {orderMoviesBy} from '../store/actions'
+import {orderMoviesBy, getMoreMovies} from '../store/actions'
 
 
 export default function MoviesList ({ movies }){
@@ -11,13 +11,28 @@ export default function MoviesList ({ movies }){
   const dispatch = useDispatch()
   const [selectedMovie, setSelectedMovie] = useState(null)
   const [sortingType, setSortingType] = useState('')
+  let [currentPage, setCurrentPage] = useState(4)
+  const targetRef = useRef()
   const handleSortingChange = event => {
     setSortingType(event.target.value)
-    movies = dispatch(orderMoviesBy(event.target.value))
+    dispatch(orderMoviesBy(event.target.value))
   }
   const handleSelectMovie = movie => setSelectedMovie(movie)
   const onClose = () => setSelectedMovie(null)
-  
+
+  const cbObserverFunction = entries => {
+    let ratio = entries[0].intersectionRatio
+    console.log("Ratio: ", ratio)
+    if(ratio > 0) {
+      currentPage = currentPage + 1
+      dispatch(getMoreMovies(currentPage))
+    }
+  }
+  const intersectionObserver = new IntersectionObserver(cbObserverFunction)
+  useEffect(() => {
+    intersectionObserver.observe(targetRef.current)
+
+  }, [])
 
   return(<div className="movies-list">
       <div>
@@ -31,6 +46,7 @@ export default function MoviesList ({ movies }){
         )
       }
     </div>
+    <div ref={targetRef}></div>
     {
       selectedMovie && (
         <ExpandedMovieItem movie={selectedMovie} onClose={onClose}/>

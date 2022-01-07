@@ -7,7 +7,7 @@ export default function (state = initialState, action) {
   switch (type) {
 
     case LOAD_MOVIES:
-      return [...initialState, ...payload]
+      return [...state, ...payload]
 
     case ORDER_BY:
       let stateCopy = [...state]

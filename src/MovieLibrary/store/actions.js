@@ -24,9 +24,15 @@ export function fetchTopRatedMovies() {
     })
 }
 
-  return {
-    type: LOAD_MOVIES,
-    payload: topRatedMovies
+}
+
+export function getMoreMovies(pageNumber) {
+  return function(dispatch) {
+    fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=${pageNumber}`)
+    .then(response => response.json())
+    .then(json => {
+        dispatch({ type: LOAD_MOVIES, payload: json.results })
+    })
   }
 }
 
