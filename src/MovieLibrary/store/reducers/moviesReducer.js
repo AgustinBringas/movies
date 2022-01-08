@@ -19,6 +19,10 @@ export default function (state = initialState, action) {
         return sortingFunction(stateCopy, "asc", "vote_average")
       } else if(payload === "rating-desc") {
         return sortingFunction(stateCopy, "desc", "vote_average")
+      } else if(payload === "date-asc") {
+        return sortingFunction(stateCopy, "asc", "release_date")
+      } else if(payload === "date-desc") {
+        return sortingFunction(stateCopy, "desc", "release_date")
       }
 
     default:

@@ -98,6 +98,8 @@ function SortingOptions ({ selectedOption, onChange }) {
       <option value="name-desc">Z to A</option>
       <option value="rating-desc">Rating ↓</option>
       <option value="rating-asc">Rating ↑</option>
+      <option value="date-desc">Release date ↓</option>
+      <option value="date-asc">Release date ↑</option>
     </select>
   )
 }
