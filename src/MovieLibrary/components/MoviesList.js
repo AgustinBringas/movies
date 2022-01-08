@@ -42,7 +42,7 @@ export default function MoviesList ({ movies }){
     <div className="items">
       {
         movies.map(movie =>
-          <MovieListItem key={movie.id} movie={movie} isSelected={selectedMovie===movie} onSelect={handleSelectMovie}/>
+          <MovieListItem key={movie.id} movie={movie} onSelect={handleSelectMovie}/>
         )
       }
     </div>
@@ -58,25 +58,31 @@ export default function MoviesList ({ movies }){
 }
 
 const ExpandedMovieItem = ({movie: {title, original_title, backdrop_path, overview, vote_average, vote_count}, onClose}) => (
-  <div className="movie-modal-container" id="movie-modal-container">
-    <div className="expanded-movie-modal">
-      <TMDBImage src={backdrop_path} className="poster" />
-      <div className="description">
-        <h2>{title}({original_title})</h2>
-        <div><h4>Rank(votes count)</h4>: <span>{vote_average}({vote_count})</span></div>
-        <span>{overview}</span>
-        <button onClick={onClose}>Close</button>
+  
+    <div className="movie-modal-container" id="movie-modal-container">
+      <span className="modal-outside-click" onClick={onClose}></span>
+      <div className="expanded-movie-modal">
+      <span onClick={onClose} className="close-btn"></span>
+        <div className="poster-container" >
+          <TMDBImage src={backdrop_path} className="poster" alt="Image not found"/>
+        </div>
+        <div className="modal-description">
+          <h2 className="modal-title">{title}</h2>
+          <h5 className="original-title">{original_title}</h5>
+          <p className="modal-rating">Rating (votes count): <Star className="modal-rating-star"/>{vote_average} ({vote_count})</p>
+          <p className="modal-overview">{overview}</p>
+        </div>
       </div>
     </div>
-  </div>
+
 )
 
-function MovieListItem ({movie, isSelected, onSelect}) {
+function MovieListItem ({movie, onSelect}) {
   const handleClick = () => onSelect(movie)
   return(
     <div className="movie-card-container">
       <div className="movie-card" onClick={handleClick}>
-          <TMDBImage src={movie.poster_path} className="movie-card-img"/>
+          <TMDBImage src={movie.poster_path} className="movie-card-img" alt="Image not found"/>
           <span className="movie-title">{movie.title}</span>
           <span className="movie-votes"><Star className="star-symbol"/>{movie.vote_average}</span>
       </div>
