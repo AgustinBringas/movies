@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import {fetchTopRatedMovies} from '../store/actions'
+import {fetchFirstMovies} from '../store/actions'
 import logo from './logo.svg'
 import './MovieLibrary.css'
-import { getMovies } from '../store/selectors'
+import { getFavMovies, getMovies } from '../store/selectors'
 import MoviesList from './MoviesList'
 
 export default function MovieLibrary() {
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(fetchTopRatedMovies())
+    dispatch(fetchFirstMovies())
   }, [])
-  const movies = useSelector(getMovies)
+  const allMovies = useSelector(getMovies)
+  const favMovies = useSelector(getFavMovies)
+
   
   return(
     <div className="MovieLibrary">
@@ -20,7 +22,7 @@ export default function MovieLibrary() {
         <h1 className="ML-title">Movies</h1>
       </header>
       <div className="ML-intro">
-        { movies.length && <MoviesList movies={movies}/> }
+        { allMovies.length && <MoviesList allMovies={allMovies} favMovies={favMovies}/> }
       </div>
     </div>)
 }

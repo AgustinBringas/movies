@@ -3,47 +3,70 @@ import TMDBImage from './TMDBImage'
 import './MoviesList.css'
 import { ReactComponent as Star } from './star.svg';
 import {useDispatch} from 'react-redux'
-import {orderMoviesBy, getMoreMovies} from '../store/actions'
+import {orderMoviesBy, getMoreMovies, addMovieFavourite, removeMovieFavourite} from '../store/actions'
 
 
-export default function MoviesList ({ movies }){
+export default function MoviesList ({ allMovies, favMovies }){
 
   const dispatch = useDispatch()
+  // States
   const [selectedMovie, setSelectedMovie] = useState(null)
   const [sortingType, setSortingType] = useState('')
+  const [favOnly, setFavOnly] = useState(false)
   let [currentPage, setCurrentPage] = useState(4)
+  // Functions to make infinite scroll
   const targetRef = useRef()
-  const handleSortingChange = event => {
-    setSortingType(event.target.value)
-    dispatch(orderMoviesBy(event.target.value))
-  }
-  const handleSelectMovie = movie => setSelectedMovie(movie)
-  const onClose = () => setSelectedMovie(null)
-
   const cbObserverFunction = entries => {
     let ratio = entries[0].intersectionRatio
-    console.log("Ratio: ", ratio)
     if(ratio > 0) {
-      currentPage = currentPage + 1
+      currentPage = currentPage + 1 
       dispatch(getMoreMovies(currentPage))
     }
   }
   const intersectionObserver = new IntersectionObserver(cbObserverFunction)
   useEffect(() => {
     intersectionObserver.observe(targetRef.current)
-
   }, [])
+  // Function to make sorting
+  const handleSortingChange = event => {
+    setSortingType(event.target.value)
+    dispatch(orderMoviesBy(event.target.value))
+  }
+  // Modal
+  const handleSelectMovie = movie => setSelectedMovie(movie)
+  const onClose = () => setSelectedMovie(null)
+  // Favourites
+  const handleFavouriteMovie = (movieId, isFavourite) => {
+    if(isFavourite) {
+      dispatch(addMovieFavourite(movieId))
+    } else {
+      dispatch(removeMovieFavourite(movieId))
+    }
+  }
+
+  const showFavOnly = (e) => {
+    setFavOnly(e.target.checked)
+  }
 
   return(<div className="movies-list">
       <div>
         <span>Sort by:</span>
         <SortingOptions selectedOption={sortingType} onChange={handleSortingChange}/>
       </div>
+      <input type="checkbox" onClick={(e) => showFavOnly(e)}/>
+
     <div className="items">
       {
-        movies.map(movie =>
-          <MovieListItem key={movie.id} movie={movie} onSelect={handleSelectMovie}/>
-        )
+        favOnly ?  
+        !favMovies.length ? <span>Hola mundo</span> :
+        allMovies.map(movie => {
+          if(favMovies.includes(movie.id)) {
+            return <MovieListItem key={movie.id} movie={movie} onSelect={handleSelectMovie} onFavourite={handleFavouriteMovie}/>
+          }
+        }) : 
+        allMovies.map(movie => {
+          return <MovieListItem key={movie.id} movie={movie} onSelect={handleSelectMovie} onFavourite={handleFavouriteMovie}/>
+        })
       }
     </div>
     <div ref={targetRef}></div>
@@ -77,14 +100,21 @@ const ExpandedMovieItem = ({movie: {title, original_title, backdrop_path, overvi
 
 )
 
-function MovieListItem ({movie, onSelect}) {
+function MovieListItem ({movie, onSelect, onFavourite}) {
   const handleClick = () => onSelect(movie)
+  const handleFavourite = (e) => onFavourite(movie.id, e.target.checked)
   return(
     <div className="movie-card-container">
-      <div className="movie-card" onClick={handleClick}>
+      <div className="movie-card">
+        <div className="card-favourite">
+          <input id={`hearth-${movie.id}`} type="checkbox" onClick={handleFavourite} className="favourite-checkbox"/>
+          <label className="favourite-label" htmlFor={`hearth-${movie.id}`}>❤</label>
+        </div>
+        <div className="card-content" onClick={handleClick}>
           <TMDBImage src={movie.poster_path} className="movie-card-img" alt="Image not found"/>
           <span className="movie-title">{movie.title}</span>
           <span className="movie-votes"><Star className="star-symbol"/>{movie.vote_average}</span>
+        </div>
       </div>
     </div>)
 }

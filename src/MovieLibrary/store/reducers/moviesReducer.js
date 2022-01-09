@@ -1,30 +1,53 @@
-import {LOAD_MOVIES, ORDER_BY} from '../../../actionTypes'
+import {LOAD_MOVIES, ORDER_BY, ADD_MOVIE_FAVOURITE, REMOVE_MOVIE_FAVOURITE} from '../../../actionTypes'
 
-const initialState = []
+const initialState = {
+  allMovies: [],
+  favouriteMovies: []
+}
 
 export default function (state = initialState, action) {
   const {type, payload} = action
   switch (type) {
 
     case LOAD_MOVIES:
-      return [...state, ...payload]
-
-    case ORDER_BY:
-      let stateCopy = [...state]
-      if (payload === "name-asc") {
-        return sortingFunction(stateCopy, "asc", "title")
-      } else if(payload === "name-desc") {
-        return sortingFunction(stateCopy, "desc", "title")
-      } else if(payload === "rating-asc") {
-        return sortingFunction(stateCopy, "asc", "vote_average")
-      } else if(payload === "rating-desc") {
-        return sortingFunction(stateCopy, "desc", "vote_average")
-      } else if(payload === "date-asc") {
-        return sortingFunction(stateCopy, "asc", "release_date")
-      } else if(payload === "date-desc") {
-        return sortingFunction(stateCopy, "desc", "release_date")
+      return {
+        ...state,
+        allMovies: [...state.allMovies, ...payload]
       }
 
+    case ORDER_BY:
+      let stateCopy = [...state.allMovies]
+      let sortedMovies
+      if (payload === "name-asc") {
+        sortedMovies = sortingFunction(stateCopy, "asc", "title")
+      } else if(payload === "name-desc") {
+        sortedMovies = sortingFunction(stateCopy, "desc", "title")
+      } else if(payload === "rating-asc") {
+        sortedMovies = sortingFunction(stateCopy, "asc", "vote_average")
+      } else if(payload === "rating-desc") {
+        sortedMovies = sortingFunction(stateCopy, "desc", "vote_average")
+      } else if(payload === "date-asc") {
+        sortedMovies = sortingFunction(stateCopy, "asc", "release_date")
+      } else if(payload === "date-desc") {
+        sortedMovies = sortingFunction(stateCopy, "desc", "release_date")
+      }
+      return {
+        ...state,
+        allMovies: sortedMovies
+      }
+
+    case ADD_MOVIE_FAVOURITE:
+      return {
+        ...state,
+        favouriteMovies: [...state.favouriteMovies, payload]
+      }
+    
+    case REMOVE_MOVIE_FAVOURITE:
+      const newFavourites = state.favouriteMovies.filter(movieId => movieId !== payload)
+      return {
+        ...state,
+        favouriteMovies: newFavourites
+      }
     default:
       return state
   }

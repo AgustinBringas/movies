@@ -1,9 +1,8 @@
-import {LOAD_MOVIES, ORDER_BY} from '../../actionTypes'
-import topRatedMovies from '../mocks/topTatedMovies'
+import {LOAD_MOVIES, ORDER_BY, ADD_MOVIE_FAVOURITE, REMOVE_MOVIE_FAVOURITE} from '../../actionTypes'
 
 const API_KEY = "54ffed57deb5a7a8688be4de3007e578"
 
-export function fetchTopRatedMovies() {
+export function fetchFirstMovies() {
   return function(dispatch) {
     let allMovies = []
     fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=${1}`)
@@ -40,5 +39,19 @@ export function orderMoviesBy(payload) {
   return {
     type: ORDER_BY,
     payload: payload
+  }
+}
+
+export function addMovieFavourite(movieId) {
+  return {
+    type: ADD_MOVIE_FAVOURITE,
+    payload: movieId
+  }
+}
+
+export function removeMovieFavourite(movieId) {
+  return {
+    type: REMOVE_MOVIE_FAVOURITE,
+    payload: movieId
   }
 }

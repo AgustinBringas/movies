@@ -1,50 +1,18 @@
-/* .movies-list {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-} */
-
+html {
+  height: 100%;
+}
 .movies-list > .items {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  /* min-height: 40rem; */
 }
-
-/* .expanded-movie-item {
-  width: 80%;
-  display: flex;
-  flex-direction: row;
-} */
-
-/* .expanded-movie-item h4 {
-  display: inline;
-}
-
-.expanded-movie-item  > .description {
-  display: flex;
-  flex-direction: column;
-}
-
-.movie-list-item {
-  cursor: pointer;
-}
-
-.movie-list-item.selected {
-  text-decoration: underline;
-} */
-
-
-.movie-card-img {
-  height: 274px;
-  width: 185px;
-  border-radius: 5px 5px 0px 0px;
-}
-
+/* Card CSS */
 .movie-card {
   display: flex;
   flex-direction: column;
   background-color: #1A1A1A;
-  margin: 10px;
+  margin: 10px 10px 25px 10px;
   width: 185px;
   height: auto;
   cursor: pointer;
@@ -52,12 +20,22 @@
   border-radius: 5px;
 }
 
-.movie-card:hover {
-  transform: scale(1.15);
-  z-index: 1;
-  box-shadow: 0px 0px 15px 5px rgba(65, 64, 64, 0.4);
+.card-content {
+  display: flex;
+  flex-direction: column;
 }
 
+.movie-card-img {
+  height: 274px;
+  width: 185px;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.movie-card:hover {
+  transform: scale(1.15);
+  z-index: 0;
+  box-shadow: 0px 0px 15px 5px rgba(65, 64, 64, 0.4);
+}
 
 .movie-title {
   text-align: left;
@@ -69,7 +47,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   height: 40px;
-  
+
 }
 
 .movie-votes {
@@ -85,6 +63,35 @@
   margin-right: 5px;
 }
 
+/* Favourite card button */
+
+.card-favourite {
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px 0px 5px 0px;
+  background-color: rgba(65, 64, 64, 0.4);
+}
+
+.favourite-checkbox {
+  display: none;
+}
+
+.favourite-label {
+  font-size: 25px;
+  transition: 500ms;
+  cursor: pointer;
+}
+
+.favourite-checkbox:checked + .favourite-label {
+  color: red;
+  transform: scale(1.2);
+}
+
+/* Modal */
 .movie-modal-container {
   display: none;
   position: fixed;
@@ -124,14 +131,15 @@
 .poster-container::after {
   content: '';
   position: absolute;
-  left: 0; 
+  left: 0;
   top: 0;
-  width: 100%; 
+  width: 100%;
   height: 100%;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0),#141111);
 }
 
 .modal-description {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -147,8 +155,6 @@
   position: absolute;
   z-index: -1;
 }
-
-
 
 .modal-rating-star {
   width: 16px;
@@ -166,6 +172,7 @@
   text-align: left;
 }
 
+/* Modal close btn */
 .close-btn {
   position: absolute;
   z-index: 1;
