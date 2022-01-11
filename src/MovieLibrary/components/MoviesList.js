@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import TMDBImage from './TMDBImage'
+import MovieModal from './MovieModal'
+import MovieListItem from './MovieListItem'
 import './MoviesList.css'
 import { ReactComponent as Star } from './star.svg';
 import {useDispatch} from 'react-redux'
@@ -23,7 +25,6 @@ export default function MoviesList ({ allMovies, favMovies }){
     let ratio = entries[0].intersectionRatio
     if(ratio > 0 && !favBtn.checked) {
       currentPage = currentPage + 1 
-      console.log("Busque en la pagina: ", currentPage, favOnly)
       dispatch(getMoreMovies(currentPage))
     }
   }
@@ -39,7 +40,7 @@ export default function MoviesList ({ allMovies, favMovies }){
     });
     
   }, [])
-  // Function to make sorting
+  // Function to sort
   const handleSortingChange = event => {
     setSortingType(event.target.value)
     dispatch(orderMoviesBy(event.target.value))
@@ -56,12 +57,12 @@ export default function MoviesList ({ allMovies, favMovies }){
     }
   }
 
-
   const showFavOnly = (e) => {
     const favBtn = document.getElementById("favBtn")
     setFavOnly(favBtn.checked)
   }
 
+  // Back to top button
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -69,14 +70,14 @@ export default function MoviesList ({ allMovies, favMovies }){
     });
   };
 
-  return(<div className="movies-list">
-      <div>
-        <span>Sort by:</span>
-        <SortingOptions selectedOption={sortingType} onChange={handleSortingChange}/>
-      </div>
+  return(
+  <div className="movies-list">
+    <div>
+      <span>Sort by:</span>
+      <SortingOptions selectedOption={sortingType} onChange={handleSortingChange}/>
       <input type="checkbox" id="favBtn" onClick={(e) => showFavOnly(e)} value={favOnly}/>
       <label htmlFor="favBtn">Show favourite movies only</label>
-
+    </div>
     <div className="items">
       {
         favOnly ?  
@@ -93,59 +94,21 @@ export default function MoviesList ({ allMovies, favMovies }){
     </div>
     {
       showTopBtn && (
-          <button onClick={scrollToTop} className="back-to-top">
-            &#8679;
-          </button>
-        )
+        <button onClick={scrollToTop} className="back-to-top">
+          &#8679;
+        </button>
+      )
     }
     <div ref={targetRef}></div>
     {
       selectedMovie && (
-        <ExpandedMovieItem movie={selectedMovie} onClose={onClose}/>
+        <MovieModal movie={selectedMovie} onClose={onClose}/>
       )
     }
-  </div>)
+  </div>
+  )
 
   
-}
-
-const ExpandedMovieItem = ({movie: {title, original_title, backdrop_path, overview, vote_average, vote_count}, onClose}) => (
-  
-    <div className="movie-modal-container" id="movie-modal-container">
-      <span className="modal-outside-click" onClick={onClose}></span>
-      <div className="expanded-movie-modal">
-      <span onClick={onClose} className="close-btn"></span>
-        <div className="poster-container" >
-          <TMDBImage src={backdrop_path} className="poster" alt="Image not found"/>
-        </div>
-        <div className="modal-description">
-          <h2 className="modal-title">{title}</h2>
-          <h5 className="original-title">{original_title}</h5>
-          <p className="modal-rating">Rating (votes count): <Star className="modal-rating-star"/>{vote_average} ({vote_count})</p>
-          <p className="modal-overview">{overview}</p>
-        </div>
-      </div>
-    </div>
-
-)
-
-function MovieListItem ({movie, onSelect, onFavourite}) {
-  const handleClick = () => onSelect(movie)
-  const handleFavourite = (e) => onFavourite(movie.id, e.target.checked)
-  return(
-    <div className="movie-card-container">
-      <div className="movie-card">
-        <div className="card-favourite">
-          <input id={`hearth-${movie.id}`} type="checkbox" onClick={handleFavourite} className="favourite-checkbox"/>
-          <label className="favourite-label" htmlFor={`hearth-${movie.id}`}>❤</label>
-        </div>
-        <div className="card-content" onClick={handleClick}>
-          <TMDBImage src={movie.poster_path} className="movie-card-img" alt="Image not found"/>
-          <span className="movie-title">{movie.title}</span>
-          <span className="movie-votes"><Star className="star-symbol"/>{movie.vote_average}</span>
-        </div>
-      </div>
-    </div>)
 }
 
 function SortingOptions ({ selectedOption, onChange }) {
@@ -162,4 +125,3 @@ function SortingOptions ({ selectedOption, onChange }) {
     </select>
   )
 }
-
