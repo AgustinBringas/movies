@@ -13,19 +13,31 @@ export default function MoviesList ({ allMovies, favMovies }){
   const [selectedMovie, setSelectedMovie] = useState(null)
   const [sortingType, setSortingType] = useState('')
   const [favOnly, setFavOnly] = useState(false)
+  const [showTopBtn, setShowTopBtn] = useState(false)
   let [currentPage, setCurrentPage] = useState(4)
+  
   // Functions to make infinite scroll
   const targetRef = useRef()
   const cbObserverFunction = entries => {
+    const favBtn = document.getElementById("favBtn")
     let ratio = entries[0].intersectionRatio
-    if(ratio > 0) {
+    if(ratio > 0 && !favBtn.checked) {
       currentPage = currentPage + 1 
+      console.log("Busque en la pagina: ", currentPage, favOnly)
       dispatch(getMoreMovies(currentPage))
     }
   }
   const intersectionObserver = new IntersectionObserver(cbObserverFunction)
   useEffect(() => {
-    intersectionObserver.observe(targetRef.current)
+    intersectionObserver.observe(targetRef.current);
+    window.addEventListener("scroll", () => {
+      if (window.pageYOffset > 300) {
+        setShowTopBtn(true);
+      } else {
+        setShowTopBtn(false);
+      }
+    });
+    
   }, [])
   // Function to make sorting
   const handleSortingChange = event => {
@@ -44,16 +56,26 @@ export default function MoviesList ({ allMovies, favMovies }){
     }
   }
 
+
   const showFavOnly = (e) => {
-    setFavOnly(e.target.checked)
+    const favBtn = document.getElementById("favBtn")
+    setFavOnly(favBtn.checked)
   }
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
 
   return(<div className="movies-list">
       <div>
         <span>Sort by:</span>
         <SortingOptions selectedOption={sortingType} onChange={handleSortingChange}/>
       </div>
-      <input type="checkbox" onClick={(e) => showFavOnly(e)}/>
+      <input type="checkbox" id="favBtn" onClick={(e) => showFavOnly(e)} value={favOnly}/>
+      <label htmlFor="favBtn">Show favourite movies only</label>
 
     <div className="items">
       {
@@ -69,6 +91,13 @@ export default function MoviesList ({ allMovies, favMovies }){
         })
       }
     </div>
+    {
+      showTopBtn && (
+          <button onClick={scrollToTop} className="back-to-top">
+            &#8679;
+          </button>
+        )
+    }
     <div ref={targetRef}></div>
     {
       selectedMovie && (
@@ -122,14 +151,14 @@ function MovieListItem ({movie, onSelect, onFavourite}) {
 function SortingOptions ({ selectedOption, onChange }) {
 
   return (
-    <select value={selectedOption} onChange={onChange}>
+    <select value={selectedOption} onChange={onChange} className="sorting-options">
       <option value="" disabled></option>
       <option value="name-asc">A to Z</option>
       <option value="name-desc">Z to A</option>
-      <option value="rating-desc">Rating ↓</option>
-      <option value="rating-asc">Rating ↑</option>
-      <option value="date-desc">Release date ↓</option>
-      <option value="date-asc">Release date ↑</option>
+      <option value="rating-desc">Most rated</option>
+      <option value="rating-asc">Less rated</option>
+      <option value="date-desc">Newer movies</option>
+      <option value="date-asc">Older movies</option>
     </select>
   )
 }

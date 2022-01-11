@@ -211,3 +211,26 @@ html {
   transform: rotate(-45deg);
 }
 
+/* Back to top btn */
+
+.back-to-top {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  font-size: 40px;
+  background: white;
+  color: black;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+  height: 56px;
+  width: 56px;
+  transition: 200ms;
+  opacity: 0.8;
+} 
+
+.back-to-top:hover {
+  background: rgb(22, 22, 22);
+  color: white;
+  opacity: 1;
+}

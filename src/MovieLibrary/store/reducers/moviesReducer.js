@@ -10,27 +10,58 @@ export default function (state = initialState, action) {
   switch (type) {
 
     case LOAD_MOVIES:
+      const newAllMovies = [...state.allMovies, ...payload]
+      // This is to not add duplicates because sometimes the api sends the same movie in 2 different pages
+      var result = newAllMovies.filter(function(e) {
+        let key = Object.keys(e).map(k => e[k]).join('|');
+        if (!this[key]) {
+          this[key] = true;
+          return true;
+        }
+      }, {});
       return {
         ...state,
-        allMovies: [...state.allMovies, ...payload]
+        allMovies: result
       }
 
     case ORDER_BY:
       let stateCopy = [...state.allMovies]
       let sortedMovies
-      if (payload === "name-asc") {
-        sortedMovies = sortingFunction(stateCopy, "asc", "title")
-      } else if(payload === "name-desc") {
-        sortedMovies = sortingFunction(stateCopy, "desc", "title")
-      } else if(payload === "rating-asc") {
-        sortedMovies = sortingFunction(stateCopy, "asc", "vote_average")
-      } else if(payload === "rating-desc") {
-        sortedMovies = sortingFunction(stateCopy, "desc", "vote_average")
-      } else if(payload === "date-asc") {
-        sortedMovies = sortingFunction(stateCopy, "asc", "release_date")
-      } else if(payload === "date-desc") {
-        sortedMovies = sortingFunction(stateCopy, "desc", "release_date")
+      switch (payload) {
+        case "name-asc":
+          sortedMovies = sortingFunction(stateCopy, "asc", "title")
+          break;
+        case "name-desc":
+          sortedMovies = sortingFunction(stateCopy, "desc", "title")
+          break;
+        case "rating-asc":
+          sortedMovies = sortingFunction(stateCopy, "asc", "vote_average")
+          break;
+        case "rating-desc":
+          sortedMovies = sortingFunction(stateCopy, "desc", "vote_average")
+          break;
+        case "date-asc":
+          sortedMovies = sortingFunction(stateCopy, "asc", "release_date")
+          break;  
+        case "date-desc":
+          sortedMovies = sortingFunction(stateCopy, "desc", "release_date")
+          break;
+        default:
+          break;
       }
+      // if (payload === "name-asc") {
+      //   sortedMovies = sortingFunction(stateCopy, "asc", "title")
+      // } else if(payload === "name-desc") {
+      //   sortedMovies = sortingFunction(stateCopy, "desc", "title")
+      // } else if(payload === "rating-asc") {
+      //   sortedMovies = sortingFunction(stateCopy, "asc", "vote_average")
+      // } else if(payload === "rating-desc") {
+      //   sortedMovies = sortingFunction(stateCopy, "desc", "vote_average")
+      // } else if(payload === "date-asc") {
+      //   sortedMovies = sortingFunction(stateCopy, "asc", "release_date")
+      // } else if(payload === "date-desc") {
+      //   sortedMovies = sortingFunction(stateCopy, "desc", "release_date")
+      // }
       return {
         ...state,
         allMovies: sortedMovies
