@@ -3,7 +3,7 @@ import TMDBImage from './TMDBImage'
 import "./MovieModal.css"
 import { ReactComponent as Star } from './star.svg';
 
-export default function MovieModal({movie: {title, original_title, backdrop_path, overview, vote_average, vote_count}, onClose}) {
+export default function MovieModal({movie: {title, original_title, backdrop_path, overview, vote_average, vote_count, release_date}, onClose}) {
     return (
     <div className="movie-modal-container" id="movie-modal-container">
         <span className="modal-outside-click" onClick={onClose}></span>
@@ -15,7 +15,10 @@ export default function MovieModal({movie: {title, original_title, backdrop_path
             <div className="modal-description">
                 <h2 className="modal-title">{title}</h2>
                 <h5 className="original-title">{original_title}</h5>
-                <p className="modal-rating">Rating (votes count): <Star className="modal-rating-star"/>{vote_average} ({vote_count})</p>
+                <div className="rating-release-div">
+                    <p className="modal-rating">Rating (votes count): <Star className="modal-rating-star"/>{vote_average} ({vote_count})</p>
+                    <p className="modal-release-date">{release_date}</p>
+                </div>
                 <p className="modal-overview">{overview}</p>
             </div>
         </div>

@@ -49,19 +49,6 @@ export default function (state = initialState, action) {
         default:
           break;
       }
-      // if (payload === "name-asc") {
-      //   sortedMovies = sortingFunction(stateCopy, "asc", "title")
-      // } else if(payload === "name-desc") {
-      //   sortedMovies = sortingFunction(stateCopy, "desc", "title")
-      // } else if(payload === "rating-asc") {
-      //   sortedMovies = sortingFunction(stateCopy, "asc", "vote_average")
-      // } else if(payload === "rating-desc") {
-      //   sortedMovies = sortingFunction(stateCopy, "desc", "vote_average")
-      // } else if(payload === "date-asc") {
-      //   sortedMovies = sortingFunction(stateCopy, "asc", "release_date")
-      // } else if(payload === "date-desc") {
-      //   sortedMovies = sortingFunction(stateCopy, "desc", "release_date")
-      // }
       return {
         ...state,
         allMovies: sortedMovies

@@ -26,3 +26,15 @@
   color: white;
   opacity: 1;
 }
+
+.empty-fav-msg {
+  margin-top: 300px;
+  font-size: 40px;
+  background-color: #1A1A1A;
+  height: 140px;
+  width: 1000px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+}

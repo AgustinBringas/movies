@@ -10,9 +10,12 @@
 
 .ML-header {
   background-color: #222;
-  height: 150px;
+  height: 70px;
   padding: 20px;
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .ML-title {
@@ -27,4 +30,34 @@
 @keyframes ML-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(720deg); }
+}
+
+#favCheck {
+  display: none;
+}
+
+.label-fav-check {
+  cursor: pointer;
+  transition: 150ms;
+  font-size: 20px;
+}
+
+.movie-logo {
+  height: 110px;
+  width: 110px;
+  margin-left: 50px;
+}
+
+.filter-div {
+  display: flex;
+  flex-direction: column;
+  margin-right: 150px;
+}
+
+.sort-text {
+  font-size: 20px;
+}
+
+.sorting-options {
+  margin-bottom: 15px;
 }
